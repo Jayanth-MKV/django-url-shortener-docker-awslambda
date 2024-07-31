@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style> 
+		@font-face {
+			font-family: 'Google Sans';
+			font-style: normal;
+			font-weight: 400 700;
+			src: url(https://fonts.gstatic.com/s/googlesans/v59/4UasrENHsxJlGDuGo1OIlJfC6l_24rlCK1Yo_Iqcsih3SAyH6cAwhX9RPjIUvQ.woff2) format('woff2');
+			unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+		}
+		
+		body {
+			background-color: black;
+			color: white;
+			font: normal 40px "Google Sans";
+		}
+	</style>
+</head>
+
+<body>
+	<p>
+		A middleware before going anywhere.
+	</p>
+	<p id="mess">
+	</p>
+</body>
+
+<script>
+	const display = document.querySelector('#mess');
+	var url = '{{url}}';
+
+	// checks if the url has http or https
+	if (!/^https?:\/\//i.test(url))
+		url = 'http://' + url;
+	
+	const delay = Number('{{seconds}}') * 1000;
+	
+	const showSecond = (n) => {
+		display.innerText = `you'll be redirected in ${n}`;
+	}
+	for (let i = 0; i < delay - 51; i++){
+		setTimeout(() => {
+			showSecond( ( (delay-i)/1000 ).toFixed(1) );
+		}, (i));
+	}
+	
+	setTimeout(() => {
+		window.location.replace(url)
+	} , delay)
+	
+</script>
+</html>

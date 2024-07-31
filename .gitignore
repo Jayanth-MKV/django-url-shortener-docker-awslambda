@@ -1,0 +1,86 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Django
+db.sqlite3
+*.sqlite3
+*.log
+/static/
+media/
+
+# Environment
+.env
+*.env
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+*.DS_Store
+
+# Operating System
+*.DS_Store
+*.AppleDouble
+*.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local virtual environment
+venv/
+env/
+.venv/
+.env/
+pipenv/
+poetry.lock
+
+# macOS
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# mypy
+.mypy_cache/
+
+# TypeScript
+*.tsbuildinfo
+
+# Sphinx documentation
+docs/_build/
+
+# Pytest
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+*.log
+
+# Bandit
+bandit_report.html
+bandit_report.json
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+local_settings.py

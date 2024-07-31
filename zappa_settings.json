@@ -1,0 +1,17 @@
+{
+    "dev": {
+        "aws_region": "ap-southeast-2",
+        "django_settings": "app.settings",
+        "exclude": [
+            "boto3",
+            "dateutil",
+            "botocore",
+            "s3transfer",
+            "concurrent"
+        ],
+        "profile_name": "default",
+        "project_name": "django-url-shor",
+        "runtime": "python3.12",
+        "s3_bucket": "zappa-3txr7z0fu"
+    }
+}

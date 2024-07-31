@@ -1,0 +1,19 @@
+FROM python:3.11.9-slim AS stage-1
+COPY . /django_lambda/
+WORKDIR /django_lambda
+RUN pip install pipenv
+RUN pipenv install -r requirements.txt
+RUN pipenv run zappa package -o /django_zappa.zip
+FROM python:3.11.9-slim
+COPY --from=stage-1 django_zappa.zip /django_zappa.zip
+RUN apt-get update && apt-get install -y unzip
+RUN pip install awslambdaric boto3
+RUN unzip /django_zappa.zip -d /app/
+WORKDIR /app
+# IMPORTANT TO SET THIS
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
+COPY entry.sh /
+RUN chmod 755 /usr/bin/aws-lambda-rie /entry.sh
+ENTRYPOINT [ "/entry.sh" ]
+CMD ["handler.lambda_handler"]

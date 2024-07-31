@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,
+	iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAMFBMVEU0OkArMjhobHEoPUPFEBIu
+	O0L+AAC2FBZ2JyuNICOfGx7xAwTjCAlCNTvVDA1aLzQ3COjMAAAAVUlEQVQI12NgwAaCDSA0888G
+	CItjn0szWGBJTVoGSCjWs8TleQCQYV95evdxkFT8Kpe0PLDi5WfKd4LUsN5zS1sKFolt8bwAZrCa
+	GqNYJAgFDEpQAAAzmxafI4vZWwAAAABJRU5ErkJggg==" />
+	<meta name="csrf-token" content="{{ csrf_token }}">
+	<title>URL Shortener</title>
+	{% load static %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		/* arabic */
+@font-face {
+	font-family: 'Baloo';
+	font-style: normal;
+	font-weight: 400 800;
+	font-display: swap;
+	src: url(https://fonts.gstatic.com/s/baloobhaijaan2/v19/zYX9KUwuEqdVGqM8tPDdAA_Y-_bMAIRsdO_q.woff2) format('woff2');
+	unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EFD-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1;
+}
+/* latin */
+@font-face {
+	font-family: 'Baloo';
+	font-style: normal;
+	font-weight: 400 800;
+	font-display: swap;
+	src: url(https://fonts.gstatic.com/s/baloobhaijaan2/v19/zYX9KUwuEqdVGqM8tPDdAA_Y-_bMAIFsdA.woff2) format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+body {
+	font-family: 'Baloo';
+	/* background-color: black;
+	color: white; */
+	display: flex;
+	justify-content: center;
+	height: 95vh;
+	margin: 0;
+}
+.cont {
+	margin-top: 25vh;
+}
+input {
+	background-color: transparent;
+	color: white;
+	outline: none;
+	border: none;
+	border: 1px solid rgb(40,40,40);
+	border-radius: 5px;
+	font-size: 20px;
+	padding: 5px 10px;
+	background-color: rgb(10,10,10);
+	width: 400px;
+}
+label {
+	font-size: 30px;
+	font-family: 'baloo';
+}
+form {
+	display: flex;
+	flex-direction: column;
+}
+button[type="submit"] {
+	background-color: transparent;
+	color: inherit;
+	outline: none;
+	border: 1px solid rgb(30,30,30);
+	border-radius: 5px;
+	width: 100px;
+	height: 38px;
+	font: normal 20px 'Baloo';
+	cursor: pointer;
+	align-self: end;
+}
+button[type="submit"]:hover {
+	background-color: rgb(30,30,30);
+}
+button[type="submit"]:active {
+	background-color: rgb(50,50,50);
+}
+
+.text {
+	margin-top: 18px;
+}
+
+.mess {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin: 20px 0;
+	padding: 3px 0;
+	height: 30px;
+	border-radius: 10px;
+	user-select: none;
+	background-color: rgb(25,25,25);
+}
+
+.hoverable {
+	cursor: pointer;
+}
+.hoverable:hover svg {
+	fill: white;
+}
+
+svg {
+	margin-left: 10px;
+	fill: #8e8e8e;
+}
+
+.off {
+	display: none;
+}
+	</style>
+
+<style>
+    /* Loader CSS */
+    .loader {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3; /* Light grey */
+        border-top: 3px solid #3498db; /* Blue */
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 10px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .btn-with-loader {
+        position: relative;
+    }
+
+    .btn-with-loader .loader {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+
+
+</head>
+
+<script>
+	
+	const qs = (e, d = document) => { return d.querySelector(e) };
+	const ael = "addEventListener";
+	
+</script>
+
+<body>
+	<div class="container">
+        <div class="row mt-5">
+            <div class="col-md-8 offset-md-2">
+                <form action="{% url 'create_view' %}" method="get">
+                    <div class="form-group">
+                        <label for="url">Enter Your URL</label>
+                        <input required id="url" type="text" name="url" class="form-control">
+                    </div>
+					<button type="submit" class="btn btn-primary btn-with-loader">
+						Shorten
+						<span class="loader"></span>
+					</button>
+				                </form>
+
+                {% if link %}
+                <div class="alert alert-info mt-3">
+                    <div class="d-flex justify-content-between">
+                        <span id="shortened-url"></span>
+                        <button class="btn btn-secondary btn-with-loader" id="copy-button" onclick="copyToClipboard()">Copy</button>
+                    </div>
+                </div>
+                <a id="open-link" href="#" class="btn btn-info mt-2" target="_blank">Open Link</a>
+                {% endif %}
+
+			<!-- Search -->
+			<div class="mt-5">
+				<h4>Search Links</h4>
+				<input type="text" id="search-bar" class="form-control" placeholder="Search Links...">
+				<button id="search-button" class="btn btn-info mt-2">Search
+					<span id="search-loader" class="loader" style="display: none;"></span>
+				</button>
+			</div>
+
+                <!-- Links Table -->
+                <h4 class="mt-5">Links</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Key</th>
+                            <th>URL</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="links-table-body">
+                        {% for link in all_links %}
+                        <tr>
+                            <td>{{ link.key }}</td>
+                            <td>{{ link.url }}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="updateLink('{{ link.key }}','{{ link.url }}')">Update
+									<span class="loader" style="display: none;"></span>
+								</button>
+								<button class="btn btn-danger btn-sm" onclick="deleteLink('{{ link.key }}')">Delete
+									<span class="loader" style="display: none;"></span>
+								</button>
+								<a href="{{ link.url }}" class="btn btn-info btn-sm" target="_blank">Visit</a>
+                            </td>
+                        </tr>
+						{% empty %}
+                        <tr><td colspan="3">No links found</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+
+		    // Function to show the loader and disable the button
+			function showLoader(button) {
+        button.querySelector('.loader').style.display = 'inline-block';
+        button.disabled = true;
+    }
+
+    // Function to hide the loader and enable the button
+    function hideLoader(button) {
+        button.querySelector('.loader').style.display = 'none';
+        button.disabled = false;
+    }
+
+		    // Function to handle updating link
+		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+		function updateLink(key,url) {
+			console.log(key)
+			const button = document.querySelector(`button[onclick="updateLink('${key}','${url}')"]`);
+			console.log(button)
+        showLoader(button);
+
+        const newUrl = prompt('Enter new URL:',url);
+        if (newUrl) {
+            fetch(`/dev/update/${key}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `url=${encodeURIComponent(newUrl)}`
+            }).then(response => {
+				if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to update the link.');
+                }
+            }).finally(() => {
+                hideLoader(button);
+				window.location.replace('/dev');
+            });
+        } else {
+			hideLoader(button);
+			window.location.replace('/dev');
+        }
+    }
+
+    // Example: Delete link button
+    function deleteLink(key) {
+        const button = document.querySelector(`button[onclick="deleteLink('${key}')"]`);
+        showLoader(button);
+
+        if (confirm('Are you sure you want to delete this link?')) {
+            fetch(`/dev/delete/${key}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete the link.');
+                }
+            }).finally(() => {
+                hideLoader(button);
+				window.location.replace('/dev');
+            });
+        } else {
+            hideLoader(button);
+			window.location.replace('/dev');
+        }
+    }
+	
+	</script>
+	<script>
+		function copyToClipboard() {
+			const urlElement = document.getElementById('shortened-url');
+            const url = urlElement.textContent;
+            navigator.clipboard.writeText(url).then(() => {
+				alert('URL copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy URL.');
+            });
+        }
+		// Function to build the full URL in JavaScript
+        function buildFullURL() {
+            const key = "{{ key }}";
+            const baseURL = window.location.origin+"/dev";
+            const fullURL = `${baseURL}/${key}`;
+            document.getElementById('shortened-url').textContent = fullURL;
+            document.getElementById('open-link').href = fullURL;
+        }
+
+        // Run the buildFullURL function if there is a key
+        if ("{{ key }}" !== "") {
+            buildFullURL();
+        }
+
+	</script>
+	<script>
+        // Search functionality
+        document.getElementById('search-button').addEventListener('click', function () {
+            const sb = document.querySelector("#search-loader");
+			sb.style.display = 'inline-block';
+			const query = document.getElementById('search-bar').value;
+            const url = new URL(window.location.origin+ "/dev");
+            url.searchParams.set('searchterm', query);
+			console.log(url)
+			window.location.replace(url.href);
+            window.location.href = url.href;
+        });
+	</script>
+</body>
+
+</html>

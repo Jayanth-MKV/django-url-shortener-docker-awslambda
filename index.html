@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="16x16" href="data:image/png;base64,
+	iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAMFBMVEU0OkArMjhobHEoPUPFEBIu
+	O0L+AAC2FBZ2JyuNICOfGx7xAwTjCAlCNTvVDA1aLzQ3COjMAAAAVUlEQVQI12NgwAaCDSA0888G
+	CItjn0szWGBJTVoGSCjWs8TleQCQYV95evdxkFT8Kpe0PLDi5WfKd4LUsN5zS1sKFolt8bwAZrCa
+	GqNYJAgFDEpQAAAzmxafI4vZWwAAAABJRU5ErkJggg==" />
+    <meta name="google-site-verification" content="ZnNCbrb_bFnGJpZo1H8JehjNoJBYJHRDao-1lla-_-U" />
+    <title>django-url-shortener-docker-awslambda</title>
+</head>
+<body>
+    <p><img src="https://img.shields.io/static/v1?label=Django&amp;message=5.0.7&amp;color=092E20&amp;labelColor=white&amp;logo=django&amp;logoColor=092E20" alt="Django">
+        <img src="https://img.shields.io/static/v1?label=PIP&amp;message=24&amp;color=yellow&amp;labelColor=3775A9&amp;logo=pypi&amp;logoColor=white" alt="PIP">
+        <img src="https://img.shields.io/static/v1?label=Python&amp;message=3.12.3&amp;color=yellow&amp;labelColor=3775A9&amp;logo=py&amp;logoColor=white" alt="Python">
+        <img src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&amp;logo=amazon-aws&amp;logoColor=white" alt="AWS">
+        <img src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&amp;logo=postgresql&amp;logoColor=white" alt="Postgres"></p>
+        <h1 id="django-url-shortener-enhanced-">Django URL Shortener (Enhanced)</h1>
+        <h2 id="table-of-contents">Table of Contents</h2>
+        <ul>
+        <li><a href="#introduction">🌟 Introduction</a></li>
+        <li><a href="#added-functionality">🛠 Added Functionality</a></li>
+        <li><a href="#installation">⚙️ Installation</a></li>
+        <li><a href="#usage">🚀 Usage</a></li>
+        <li><a href="#dependencies">📦 Dependencies</a></li>
+        <li><a href="#configuration">🔧 Configuration</a></li>
+        <li><a href="#dockerization">🐳 Dockerization</a></li>
+        <li><a href="#deployment-to-aws-lambda">☁️ Deployment to AWS Lambda</a></li>
+        <li><a href="#references">🔗 References</a></li>
+        <li><a href="#troubleshooting">❗️ Troubleshooting</a></li>
+        </ul>
+        <h2 id="introduction">🌟 Introduction</h2>
+        
+        <p>Django URL Shortener is a web application for shortening URLs. This project includes additional CRUD operations, search functionality, and is containerized using Docker for deployment to AWS Lambda.</p>
+        <h2 id="added-functionality">🛠 Added Functionality</h2>
+        
+        <p>Initially cloned from </p>
+        <pre><code>https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/mmedoo/</span>django-url-shortener.git
+        </code></pre><ul>
+        <li><strong>CRUD Operations:</strong> Added functionality to Create, Read, Update, and Delete shortened URLs (Like TODOIST).</li>
+        <li><strong>Search Functionality:</strong> Implemented a search feature to find URLs based on keywords.</li>
+        <li><strong>Login Functionality</strong>: Will be implemented if time permits</li>
+        </ul>
+        <h2 id="installation">⚙️ Installation</h2>
+        
+        <p>To get the project up and running locally on the machine, follow these steps:</p>
+        <ol>
+        <li><p><strong>Clone the repository:</strong></p>
+        <pre><code class="lang-sh"> git <span class="hljs-keyword">clone</span> <span class="hljs-title">&lt;url</span>&gt;
+         cd django-url-shortener
+        </code></pre>
+        </li>
+        <li><p><strong>Set up a virtual environment:</strong></p>
+        <pre><code class="lang-sh"> python3 -m venv venv
+         <span class="hljs-keyword">source</span> venv<span class="hljs-regexp">/bin/</span>activate
+        </code></pre>
+        <pre><code class="lang-sh"> # windows
+         .<span class="hljs-symbol">\v</span>env<span class="hljs-symbol">\S</span>cripts<span class="hljs-symbol">\a</span>ctivate
+        </code></pre>
+        </li>
+        <li><p><strong>Install dependencies:</strong></p>
+        <pre><code class="lang-sh"> pip <span class="hljs-keyword">install</span> -r requirements.txt
+        </code></pre>
+        </li>
+        <li><p><strong>Run migrations:</strong></p>
+        <pre><code class="lang-sh"> python manage<span class="hljs-selector-class">.py</span> makemigrations url_shortener
+         python manage<span class="hljs-selector-class">.py</span> makemigrations
+         python manage<span class="hljs-selector-class">.py</span> migrate
+        </code></pre>
+        </li>
+        <li><p><strong>Start the development server:</strong></p>
+        <pre><code class="lang-sh"> python manage<span class="hljs-selector-class">.py</span> runserver
+        </code></pre>
+        </li>
+        </ol>
+        <h2 id="usage">🚀 Usage</h2>
+        
+        <h3 id="shorten-a-url">Shorten a URL</h3>
+        <ol>
+        <li>Navigate to the home page.</li>
+        <li>Enter the URL you want to shorten in the provided form.</li>
+        <li>Click the &quot;Shorten URL&quot; button.</li>
+        <li>The shortened URL will be displayed on the screen.</li>
+        </ol>
+        <h3 id="retrieve-a-url">Retrieve a URL</h3>
+        <ol>
+        <li>Enter the shortened key in the URL path (e.g., <code>http://localhost:8000/&lt;shortened-key&gt;</code>).</li>
+        <li>You will be redirected to the original URL.</li>
+        </ol>
+        <h3 id="manage-urls">Manage URLs</h3>
+        <ol>
+        <li>Use the provided CRUD interfaces to manage the shortened URLs.</li>
+        <li>Use the search functionality to find specific URLs.</li>
+        </ol>
+        <h2 id="dependencies">📦 Dependencies</h2>
+        
+        <ul>
+        <li>Django==5.0.7</li>
+        <li>psycopg2-binary</li>
+        <li>python-dotenv</li>
+        <li>zappa</li>
+        </ul>
+        <h2 id="configuration">🔧 Configuration</h2>
+        
+        <h3 id="database">Database</h3>
+        <p>By default, this project uses PostgreSQL hosted on AWS RDS. We can configure the database by updating the <code>DATABASES</code> setting in <code>settings.py</code>.</p>
+        <h3 id="-env-setup">.env setup</h3>
+        <p>To run the application the database need to be setup, which is hosted on AWS RDS. We can configure the database by updating these.</p>
+        <pre><code class="lang-sh"><span class="hljs-attr">RDS_USERNAME</span> = <span class="hljs-string">''</span>
+        <span class="hljs-attr">RDS_PASSWORD</span> = <span class="hljs-string">''</span>
+        <span class="hljs-attr">RDS_HOSTNAME</span> = <span class="hljs-string">''</span>
+        <span class="hljs-attr">RDS_DB_NAME</span> = <span class="hljs-string">''</span>
+        </code></pre>
+        <p>If you want to use the default sqlite database:
+        In app.settings.py - change this</p>
+        <pre><code><span class="hljs-type">DATABASES</span> = {
+            <span class="hljs-symbol">'default'</span>: {
+                <span class="hljs-symbol">'ENGINE'</span>: <span class="hljs-symbol">'django</span>.db.backends.sqlite3',
+                <span class="hljs-symbol">'NAME'</span>: <span class="hljs-type">BASE_DIR</span> / <span class="hljs-symbol">'db</span>.sqlite3',
+            }
+        }
+        </code></pre><h2 id="dockerization">🐳 Dockerization</h2>
+        
+        <p>The application has been Dockerized to ensure consistent deployment and execution across different environments.</p>
+        <h3 id="dockerfile">Dockerfile</h3>
+        <pre><code class="lang-dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>.<span class="hljs-number">9</span>-slim AS stage-<span class="hljs-number">1</span>
+        <span class="hljs-keyword">COPY</span><span class="bash"> . /django_lambda/
+        </span><span class="hljs-keyword">WORKDIR</span><span class="bash"> /django_lambda
+        </span><span class="hljs-keyword">RUN</span><span class="bash"> pip install pipenv
+        </span><span class="hljs-keyword">RUN</span><span class="bash"> pipenv install -r requirements.txt
+        </span><span class="hljs-keyword">RUN</span><span class="bash"> pipenv run zappa package -o /django_zappa.zip
+        </span>
+        <span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>.<span class="hljs-number">9</span>-slim
+        <span class="hljs-keyword">COPY</span><span class="bash"> --from=stage-1 django_zappa.zip /django_zappa.zip
+        </span><span class="hljs-keyword">RUN</span><span class="bash"> apt-get update &amp;&amp; apt-get install -y unzip
+        </span><span class="hljs-keyword">RUN</span><span class="bash"> pip install awslambdaric boto3
+        </span><span class="hljs-keyword">RUN</span><span class="bash"> unzip /django_zappa.zip <span class="hljs-_">-d</span> /app/
+        </span><span class="hljs-keyword">WORKDIR</span><span class="bash"> /app
+        </span>
+        <span class="hljs-comment"># IMPORTANT TO SET THIS</span>
+        <span class="hljs-keyword">ENV</span> PYTHONPATH <span class="hljs-string">"${PYTHONPATH}:/app"</span>
+        <span class="hljs-keyword">ADD</span><span class="bash"> https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
+        </span><span class="hljs-keyword">COPY</span><span class="bash"> entry.sh /
+        </span><span class="hljs-keyword">RUN</span><span class="bash"> chmod 755 /usr/bin/aws-lambda-rie /entry.sh
+        </span><span class="hljs-keyword">ENTRYPOINT</span><span class="bash"> [ <span class="hljs-string">"/entry.sh"</span> ]
+        </span><span class="hljs-keyword">CMD</span><span class="bash"> [<span class="hljs-string">"handler.lambda_handler"</span>]</span>
+        </code></pre>
+        <p>Here for a django application to run on a serverless machine ( here AWS Lambda ) it needs to be configured accordingly so that be hosted. Thi spart is done by an opensource tool called zappa. zappa needds to be configured inside a virtual env hence pyenv is used . Instead of using zappa locally, here we did it inside the docker image.</p>
+        <p>The image building happens in two stages. First, the zappa package for the django application is created, this will be a zip file. Then create our final image for hosting this container on AWS lambda. Note that the first stage is used for building the zappa package and is not part of the final image.</p>
+        <p>Now, as we have the final image - for hosting it it need to be compatible with the AWS Lambda run time. Thus we use <a href="https://github.com/aws/aws-lambda-python-runtime-interface-client">awslambdaric</a> to implement the Lambda Runtime API, allowing to seamlessly extend our final image to be Lambda compatible.</p>
+        <p>To make it easy to locally test Lambda functions packaged as container images we use  AWS Lambda Runtime Interface Emulator <a href="https://github.com/aws/aws-lambda-python-runtime-interface-client?tab=readme-ov-file#local-testing">aws-lambda-rie</a>.</p>
+        <p>Run this final image locally and test</p>
+        <pre><code>docker build -f Dockerfile<span class="hljs-selector-class">.aws</span> -t urlapp .
+        docker run -<span class="hljs-selector-tag">p</span> <span class="hljs-number">8000</span>:<span class="hljs-number">8080</span> --name app urlapp
+        </code></pre><p>The way we test a Django web server differs from how we would test a Lambda function. The command to test our function invocation is as follows:</p>
+        <pre><code>curl -XPOST <span class="hljs-string">"http://localhost:9000/2015-03-31/functions/function/invocations"</span> -d '{<span class="hljs-string">"path"</span>: <span class="hljs-string">"/"</span>, <span class="hljs-string">"httpMethod"</span>: <span class="hljs-string">"<span class="hljs-keyword">GET</span>"</span>, <span class="hljs-string">"requestContext"</span>: {}, <span class="hljs-string">"body"</span>: null}'
+        </code></pre><h2 id="deployment-to-aws-lambda">☁️ Deployment to AWS Lambda</h2>
+        
+        <p>The application is deployed to AWS Lambda using Zappa, which converts the Django app to a serverless architecture.</p>
+        <h3 id="building-and-running-docker-image-for-hosting">Building and Running Docker Image For Hosting</h3>
+        <ol>
+        <li><p>Build the Docker image:</p>
+        <pre><code class="lang-sh"> docker build -f Dockerfile<span class="hljs-selector-class">.aws</span> -t urlapp .
+        </code></pre>
+        </li>
+        <li><p>Tag the Docker image:</p>
+        <pre><code class="lang-sh"> docker tag urlapp:latest <span class="hljs-number">339713069346</span><span class="hljs-selector-class">.dkr</span><span class="hljs-selector-class">.ecr</span><span class="hljs-selector-class">.ap-southeast-2</span><span class="hljs-selector-class">.amazonaws</span><span class="hljs-selector-class">.com</span>/urlapp:latest
+        </code></pre>
+        </li>
+        <li><p>Push the Docker image to ECR:</p>
+        <pre><code class="lang-sh"> docker push <span class="hljs-number">339713069346</span><span class="hljs-selector-class">.dkr</span><span class="hljs-selector-class">.ecr</span><span class="hljs-selector-class">.ap-southeast-2</span><span class="hljs-selector-class">.amazonaws</span><span class="hljs-selector-class">.com</span>/urlapp:latest
+        </code></pre>
+        </li>
+        <li>Deploy the Application:<pre><code class="lang-sh"> zappa deploy dev -d <span class="hljs-number">339713069346</span><span class="hljs-selector-class">.dkr</span><span class="hljs-selector-class">.ecr</span><span class="hljs-selector-class">.ap-southeast-2</span><span class="hljs-selector-class">.amazonaws</span><span class="hljs-selector-class">.com</span>/urlapp:latest
+        </code></pre>
+        Zappa takes care of the AWS Gateway here. </li>
+        </ol>
+        <h3 id="some-commands-for-reference">SOME COMMANDS FOR REFERENCE</h3>
+        <ol>
+        <li><p><strong>Install Zappa:</strong></p>
+        <pre><code class="lang-sh"> pip <span class="hljs-keyword">install</span> zappa
+        </code></pre>
+        </li>
+        <li><p><strong>Initialize Zappa:</strong></p>
+        <pre><code class="lang-sh"><span class="hljs-attribute"> zappa init</span>
+        </code></pre>
+        </li>
+        <li><p><strong>Deploy the Application:</strong></p>
+        <pre><code class="lang-sh"> zappa deploy dev -d <span class="hljs-number">339713069346</span><span class="hljs-selector-class">.dkr</span><span class="hljs-selector-class">.ecr</span><span class="hljs-selector-class">.ap-southeast-2</span><span class="hljs-selector-class">.amazonaws</span><span class="hljs-selector-class">.com</span>/urlapp:latest
+        </code></pre>
+        </li>
+        <li><p><strong>Update the Application:</strong></p>
+        <pre><code class="lang-sh"> zappa update dev -d <span class="hljs-number">339713069346</span><span class="hljs-selector-class">.dkr</span><span class="hljs-selector-class">.ecr</span><span class="hljs-selector-class">.ap-southeast-2</span><span class="hljs-selector-class">.amazonaws</span><span class="hljs-selector-class">.com</span>/urlapp:latest
+        </code></pre>
+        </li>
+        </ol>
+        <h3 id="configuration-and-deployment-details">Configuration and Deployment Details</h3>
+        <ul>
+        <li><strong>Dockerize Application:</strong> Containerized the Django application using a multi-stage Dockerfile.</li>
+        <li><strong>Zappa:</strong> Used Zappa to package and deploy the application to AWS Lambda.</li>
+        </ul>
+        <h2 id="references">🔗 References</h2>
+        
+        <ul>
+        <li><a href="https://ianwhitestone.work/zappa-serverless-docker/">Ian Whitestone&#39;s guide on Zappa and Docker</a></li>
+        <li><a href="https://markgituma.medium.com/deploying-django-docker-images-to-aws-lambda-container-5b3d9faf6982">Mark Gituma&#39;s guide on deploying Django Docker images to AWS Lambda</a></li>
+        <li><a href="https://docs.aws.amazon.com/lambda/latest/dg/python-image.html#python-image-instructions">AWS Lambda Python Image Instructions</a></li>
+        <li><a href="https://news.ycombinator.com/item?id=31183109">YCombinator discussion on AWS Lambda and Docker</a></li>
+        <li><a href="https://github.com/zappa/Zappa">Zappa GitHub repository</a></li>
+        </ul>
+        <h2 id="troubleshooting">❗️ Troubleshooting</h2>
+        
+        <h3 id="common-issues">Common Issues</h3>
+        <ul>
+        <li><strong>Server not starting:</strong> Ensure all dependencies are installed and the database migrations have been applied.</li>
+        <li><strong>Invalid URL:</strong> Make sure the URL entered is valid and follows the correct format.</li>
+        </ul>
+        
+</body>
+</html>
